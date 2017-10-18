@@ -1,0 +1,9 @@
+.idea
+*.iml
+*.png
+*.log
+
+*.blend
+
+
+target/
