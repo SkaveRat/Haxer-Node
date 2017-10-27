@@ -16,4 +16,5 @@ class RenderData() {
     var partsMinY: Float = 0.0f
     var partsMaxY: Float = 0.0f
     var samples: String = ""
+    var use_stereo: Boolean = false
 }

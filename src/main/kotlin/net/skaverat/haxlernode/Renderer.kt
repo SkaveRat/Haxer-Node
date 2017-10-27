@@ -8,6 +8,7 @@ import net.skaverat.haxlernode.amazon.AmazonClient
 import net.skaverat.haxlernode.util.Archiver
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
+import org.apache.log4j.LogManager
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -24,6 +25,8 @@ class Renderer {
 
         val client = amazonClient.getAmazonSQSClient()
         val queueUrl = client.listQueues("haxler").getQueueUrls().get(0)
+
+
         val req = ReceiveMessageRequest(queueUrl)
         req.setMaxNumberOfMessages(1)
         val messages = client.receiveMessage(req).getMessages()
@@ -46,7 +49,7 @@ class Renderer {
             logger.info("Start render")
             render(renderData)
             logger.info("Uploading finished file")
-//            uploadFrame(renderData)
+            uploadFrame(renderData)
         } else {
             logger.warn("No messages found. Waiting 5 seconds...")
             Thread.sleep(5000)
@@ -112,6 +115,9 @@ class Renderer {
                 environment.put("HAXLER_BORDER_PARTS_MINY", renderData.partsMinY.toString())
                 environment.put("HAXLER_BORDER_PARTS_MAXY", renderData.partsMaxY.toString())
             }
+            if(renderData.use_stereo) {
+                environment.put("HAXLER_STEREO", "True")
+            }
 
 
 
@@ -156,12 +162,7 @@ class Renderer {
         c.add("render.py")
         return c
     }
-
-    companion object {
-
-        private val logger = org.apache.log4j.LogManager.getLogger(Main::class.java)
+        private val logger = LogManager.getLogger(Renderer::class.java)
         private val amazonClient = AmazonClient()
-    }
-
 
 }
