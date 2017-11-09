@@ -28,7 +28,7 @@ class Renderer {
 
 
         val req = ReceiveMessageRequest(queueUrl)
-        req.setMaxNumberOfMessages(1)
+        req.maxNumberOfMessages = 1
         val messages = client.receiveMessage(req).getMessages()
 
         if (messages.size > 0) {
